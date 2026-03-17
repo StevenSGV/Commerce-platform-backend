@@ -2,6 +2,7 @@ package com.stevensgv.product_service.controller;
 
 import com.stevensgv.product_service.model.Product;
 import com.stevensgv.product_service.service.IProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,14 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
+    public Product createProduct(@Valid @RequestBody Product product) {
         productService.saveProduct(product);
         return productService.getProductById(product.getId());
     }
 
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable Long id,
-                                 @RequestBody Product product) {
+                                 @Valid @RequestBody Product product) {
         productService.updateProduct(id, product);
         return productService.getProductById(id);
     }
