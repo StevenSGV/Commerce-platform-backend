@@ -28,7 +28,7 @@ public class Product {
     @NotBlank(message = "The name is required.")
     private String name;
 
-    @Size(min = 20, message = "The minimum number of characters is 20.")
+    @Size(max = 30, message = "The max number of characters is 30.")
     private String description;
 
     @NotNull(message = "The price is required.")
