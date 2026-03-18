@@ -24,14 +24,14 @@ public class ProductController {
     @PostMapping
     public Product createProduct(@Valid @RequestBody Product product) {
         productService.saveProduct(product);
-        return productService.getProductById(product.getId());
+        return productService.findProductById(product.getId());
     }
 
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable Long id,
                                  @Valid @RequestBody Product product) {
         productService.updateProduct(id, product);
-        return productService.getProductById(id);
+        return productService.findProductById(id);
     }
 
     @DeleteMapping("{id}")

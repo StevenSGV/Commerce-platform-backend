@@ -8,7 +8,7 @@ public interface IProductService {
 
     List<Product> getProductList();
 
-    Product getProductById(Long id);
+    Product findProductById(Long id);
 
     void saveProduct(Product product);
 

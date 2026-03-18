@@ -20,8 +20,9 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found."));
+    public Product findProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Product not found."));
     }
 
     @Override
@@ -31,7 +32,7 @@ public class ProductService implements IProductService{
 
     @Override
     public void updateProduct(Long id, Product product) {
-        Product findProduct = this.getProductById(id);
+        Product findProduct = this.findProductById(id);
 
         findProduct.setName(product.getName());
         findProduct.setDescription(product.getDescription());
