@@ -3,6 +3,7 @@ package com.stevensgv.cart_service.controller;
 import com.stevensgv.cart_service.dto.ProductDTO;
 import com.stevensgv.cart_service.model.Cart;
 import com.stevensgv.cart_service.service.ICartService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,19 +22,14 @@ public class CartController {
         return cartService.getCartList();
     }
 
-    @GetMapping("/product/{id}")
-    public ProductDTO getProductById(@PathVariable Long id) {
-        return cartService.findProductById(id);
-    }
-
     @PostMapping
-    public Cart createCart(@RequestBody Cart cart) {
+    public Cart createCart(@Valid @RequestBody Cart cart) {
         cartService.saveCart(cart);
         return cartService.findCartById(cart.getId());
     }
 
     @PutMapping("/{id}")
-    public Cart updateCart(@PathVariable Long id,
+    public Cart updateCart(@Valid @PathVariable Long id,
                            @RequestBody Cart cart) {
         cartService.saveCart(cart);
         return cartService.findCartById(id);

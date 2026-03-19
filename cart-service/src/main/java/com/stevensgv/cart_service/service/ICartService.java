@@ -11,8 +11,6 @@ public interface ICartService {
 
     Cart findCartById(Long id);
 
-    ProductDTO findProductById(Long id);
-
     void saveCart(Cart cart);
 
     void updateCart(Long id, Cart cart);

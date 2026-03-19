@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +23,9 @@ public class ProductController {
         return productService.getProductList();
     }
 
-    @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productService.findProductById(id);
+    @PostMapping("/list")
+    public List<Product> validateProductList(@RequestBody Set<Long> listProductIds) {
+        return productService.validateProductList(listProductIds);
     }
 
     @PostMapping

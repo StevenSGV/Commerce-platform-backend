@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,12 @@ public class ProductService implements IProductService{
     public Product findProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found."));
+    }
+
+    @Override
+    public List<Product> validateProductList(Set<Long> listProductIds) {
+        List<Product> existingProducts = productRepository.findAllById(listProductIds);
+        return existingProducts;
     }
 
     @Override
