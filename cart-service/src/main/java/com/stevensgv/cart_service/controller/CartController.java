@@ -1,5 +1,6 @@
 package com.stevensgv.cart_service.controller;
 
+import com.stevensgv.cart_service.dto.ProductDTO;
 import com.stevensgv.cart_service.model.Cart;
 import com.stevensgv.cart_service.service.ICartService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,11 @@ public class CartController {
     @GetMapping
     public List<Cart> getCartList() {
         return cartService.getCartList();
+    }
+
+    @GetMapping("/product/{id}")
+    public ProductDTO getProductById(@PathVariable Long id) {
+        return cartService.findProductById(id);
     }
 
     @PostMapping

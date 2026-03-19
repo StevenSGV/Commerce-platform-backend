@@ -1,5 +1,6 @@
 package com.stevensgv.cart_service.service;
 
+import com.stevensgv.cart_service.dto.ProductDTO;
 import com.stevensgv.cart_service.exception.NotFoundException;
 import com.stevensgv.cart_service.model.Cart;
 import com.stevensgv.cart_service.repository.ICartRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 public class CartService implements ICartService {
 
     private final ICartRepository cartRepository;
+    private final IProductFeign productFeign;
 
     @Override
     public List<Cart> getCartList() {
@@ -22,6 +24,11 @@ public class CartService implements ICartService {
     @Override
     public Cart findCartById(Long id) {
         return cartRepository.findById(id).orElseThrow(() -> new NotFoundException("Cart not found"));
+    }
+
+    @Override
+    public ProductDTO findProductById(Long id) {
+        return productFeign.getProductById(id);
     }
 
     @Override
