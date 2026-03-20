@@ -61,6 +61,9 @@ public class OrderService implements IOrderService{
         }
 
         inventoryFeign.discountInventory(inventoryStockList);
+        order.getOrderItems().forEach(orderItem -> {
+            orderItem.setOrder(order);
+        });
         orderRepository.save(order);
     }
 
