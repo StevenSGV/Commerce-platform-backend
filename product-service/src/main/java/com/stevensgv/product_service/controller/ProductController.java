@@ -23,6 +23,8 @@ public class ProductController {
         return productService.getProductList();
     }
 
+    @GetMapping
+
     @PostMapping("/list")
     public List<Product> validateProductList(@RequestBody Set<Long> listProductIds) {
         return productService.validateProductList(listProductIds);
