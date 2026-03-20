@@ -6,10 +6,12 @@ import com.stevensgv.order_service.exception.InsufficientStockException;
 import com.stevensgv.order_service.exception.NotFoundException;
 import com.stevensgv.order_service.model.Order;
 import com.stevensgv.order_service.model.OrderItem;
+import com.stevensgv.order_service.model.OrderStatus;
 import com.stevensgv.order_service.repository.IOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,35 +37,52 @@ public class OrderService implements IOrderService{
 
     @Override
     public void saveOrder(Order order) {
-        Set<Long> listProductId = order.getOrderItems()
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new IllegalArgumentException("A new order cannot be created with CANCELLED status.");
+        }
+
+        Set<Long> productIds = order.getOrderItems()
                 .stream()
                 .map(OrderItem::getProductId)
                 .collect(Collectors.toSet());
 
-        List<ProductDTO> existingProducts = productFeign.validateProductList(listProductId);
+        List<ProductDTO> existingProducts = productFeign.validateProductList(productIds);
 
-        if (existingProducts.size() != listProductId.size()) {
+        if (existingProducts.size() != productIds.size()) {
             throw new NotFoundException("One or more requested products were not found.");
         }
 
-        Map<Long, Integer> inventoryStockList = order.getOrderItems()
-                .stream()
-                .collect(Collectors.toMap(
-                        OrderItem::getProductId,
-                        OrderItem::getQuantity));
+        BigDecimal total = order.getOrderItems().stream()
+                .map(orderItem -> orderItem.getUnitPrice()
+                        .multiply(BigDecimal.valueOf(orderItem.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        List<InventoryDTO> validatedStock = inventoryFeign.validateStock(inventoryStockList);
+        order.setTotal(total);
 
-        for (InventoryDTO inventoryDTO : validatedStock) {
-            if (!inventoryDTO.isAvailable()) {
-                throw new InsufficientStockException("Insufficient Stock for product ID: " + inventoryDTO.getProductId());
-            }
+        if (order.getStatus() == OrderStatus.PAID) {
+            Map<Long, Integer> inventoryStockList = order.getOrderItems()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            OrderItem::getProductId,
+                            OrderItem::getQuantity
+                    ));
+
+            List<InventoryDTO> validatedStock = inventoryFeign.validateStock(inventoryStockList);
+
+            validatedStock.stream()
+                    .filter(inventoryDTO -> !inventoryDTO.isAvailable())
+                    .findFirst()
+                    .ifPresent(inventoryDTO -> {
+                        throw new InsufficientStockException(
+                                "Insufficient stock for product ID: " + inventoryDTO.getProductId()
+                        );
+                    });
+
+            inventoryFeign.discountInventory(inventoryStockList);
         }
 
-        inventoryFeign.discountInventory(inventoryStockList);
-        order.getOrderItems().forEach(orderItem -> {
-            orderItem.setOrder(order);
-        });
+        order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
+
         orderRepository.save(order);
     }
 

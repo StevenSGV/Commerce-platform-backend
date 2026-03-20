@@ -27,11 +27,10 @@ public class Order {
     @Positive(message = "User ID must be a positive number")
     private Long userId;
 
-    @NotBlank(message = "Status is required.")
-    private String status;
+    @NotNull(message = "Status is required.")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
-    @NotNull(message = "Total is required.")
-    @Positive(message = "Total must be a positive number.")
     private BigDecimal total;
 
     @OneToMany(mappedBy = "order",
