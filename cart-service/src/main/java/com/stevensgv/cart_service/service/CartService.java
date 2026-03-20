@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class CartService implements ICartService {
 
     private final ICartRepository cartRepository;
-    private final IProductFeign productFeign;
+    private final ProductCircuitBreaker productCircuitBreaker;
 
     @Override
     public List<Cart> getCartList() {
@@ -37,7 +37,7 @@ public class CartService implements ICartService {
                  .map(CartItem::getProductId)
                  .collect(Collectors.toSet());
 
-         List<ProductDTO> existingProducts = productFeign.validateProductList(listIdProducts);
+         List<ProductDTO> existingProducts = productCircuitBreaker.validateProductsCircuitBreaker(listIdProducts);
 
          if (existingProducts.size() != listIdProducts.size()) {
              throw new NotFoundException("One or more requested products were not found.");
