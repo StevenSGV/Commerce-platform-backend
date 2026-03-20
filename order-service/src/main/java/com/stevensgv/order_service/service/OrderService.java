@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 public class OrderService implements IOrderService{
 
     private final IOrderRepository orderRepository;
-    private final IProductFeign productFeign;
-    private final IInventoryFeign inventoryFeign;
+    private final ProductCircuitBreaker productCircuitBreaker;
+    private final InventoryCircuitBreaker inventoryCircuitBreaker;
 
     @Override
     public List<Order> getOrderList() {
@@ -46,7 +46,7 @@ public class OrderService implements IOrderService{
                 .map(OrderItem::getProductId)
                 .collect(Collectors.toSet());
 
-        List<ProductDTO> existingProducts = productFeign.validateProductList(productIds);
+        List<ProductDTO> existingProducts = productCircuitBreaker.validateProductsCircuitBreaker(productIds);
 
         if (existingProducts.size() != productIds.size()) {
             throw new NotFoundException("One or more requested products were not found.");
@@ -67,7 +67,7 @@ public class OrderService implements IOrderService{
                             OrderItem::getQuantity
                     ));
 
-            List<InventoryDTO> validatedStock = inventoryFeign.validateStock(inventoryStockList);
+            List<InventoryDTO> validatedStock = inventoryCircuitBreaker.validateStockWithCircuitBreaker(inventoryStockList);
 
             validatedStock.stream()
                     .filter(inventoryDTO -> !inventoryDTO.isAvailable())
@@ -78,7 +78,7 @@ public class OrderService implements IOrderService{
                         );
                     });
 
-            inventoryFeign.discountInventory(inventoryStockList);
+            inventoryCircuitBreaker.discountInventoryWithCircuitBreaker(inventoryStockList);
         }
 
         order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
