@@ -31,7 +31,7 @@ public class InventoryService implements IInventoryService{
 
     @Override
     public List<InventoryDTO> validateInventoryStock(Map<Long, Integer> inventoryStockList) {
-        List<Inventory> inventoryList = inventoryRepository.findByProductId(inventoryStockList.keySet());
+        List<Inventory> inventoryList = inventoryRepository.findByProductIdIn(inventoryStockList.keySet());
 
         Map<Long, Inventory> inventoryMap = inventoryList.stream()
                 .collect(Collectors.toMap(
@@ -62,7 +62,7 @@ public class InventoryService implements IInventoryService{
 
     @Override
     public void discountInventory(Map<Long, Integer> inventoryStockList) {
-        List<Inventory> inventoryList = inventoryRepository.findByProductId(inventoryStockList.keySet());
+        List<Inventory> inventoryList = inventoryRepository.findByProductIdIn(inventoryStockList.keySet());
 
         Map<Long, Inventory> inventoryMap = inventoryList.stream()
                 .collect(Collectors.toMap(

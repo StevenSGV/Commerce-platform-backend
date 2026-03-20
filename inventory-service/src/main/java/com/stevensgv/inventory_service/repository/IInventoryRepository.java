@@ -10,5 +10,5 @@ import java.util.Set;
 @Repository
 public interface IInventoryRepository extends JpaRepository<Inventory, Long> {
 
-    List<Inventory> findByProductId(Set<Long> productIds);
+    List<Inventory> findByProductIdIn(Set<Long> productIds);
 }
