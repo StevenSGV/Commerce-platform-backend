@@ -16,26 +16,30 @@ public class PermissionService implements IPermissionService {
 
     @Override
     public List<Permission> findAll() {
-        return List.of();
+        return permissionRepository.findAll();
     }
 
     @Override
     public Optional<Permission> findById(long id) {
-        return Optional.empty();
+        return permissionRepository.findById(id);
     }
 
     @Override
     public Permission save(Permission permission) {
-        return null;
+        return permissionRepository.save(permission);
     }
 
     @Override
     public void deleteById(long id) {
-
+        permissionRepository.deleteById(id);
     }
 
     @Override
     public Permission update(Permission permission) {
-        return null;
+        if (permission.getId() == null || !permissionRepository.existsById(permission.getId())) {
+            throw new ResourceNotFoundException("Permission with id " + permission.getId() + " does not found");
+        }
+
+        return permissionRepository.save(permission);
     }
 }
