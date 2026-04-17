@@ -1,5 +1,6 @@
 package com.stevensgv.auth_service.service;
 
+import com.stevensgv.auth_service.exception.ResourceNotFoundException;
 import com.stevensgv.auth_service.model.Permission;
 import com.stevensgv.auth_service.repository.IPermissionRepository;
 import lombok.RequiredArgsConstructor;
