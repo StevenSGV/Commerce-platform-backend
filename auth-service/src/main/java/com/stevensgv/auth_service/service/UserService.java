@@ -5,6 +5,7 @@ import com.stevensgv.auth_service.model.Role;
 import com.stevensgv.auth_service.model.UserSec;
 import com.stevensgv.auth_service.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class UserService implements IUserService {
 
     private final IUserRepository userRepository;
     private final IRoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserSec> findAll() {
@@ -38,6 +40,7 @@ public class UserService implements IUserService {
     @Override
     public UserSec save(UserSec user) {
         user.setRoles(resolveRoles(user.getRoles()));
+        user.setPassword(this.encryptPassword(user.getPassword()));
 
         return userRepository.save(user);
     }
@@ -55,19 +58,22 @@ public class UserService implements IUserService {
                         new ResourceNotFoundException("user with id " + userSec.getId() + " nof found"));
 
         userFound.setEmail(userSec.getEmail());
-        userFound.setPassword(userSec.getPassword());
         userFound.setAccountNonExpired(userSec.isAccountNonExpired());
         userFound.setAccountNonLocked(userSec.isAccountNonLocked());
         userFound.setCredentialsNonExpired(userSec.isCredentialsNonExpired());
         userFound.setEnabled(userSec.isEnabled());
         userFound.setRoles(resolveRoles(userSec.getRoles()));
 
+        if (userSec.getPassword() != null && !userSec.getPassword().isBlank()) {
+            userFound.setPassword(this.encryptPassword(userSec.getPassword()));
+        }
+
         return userRepository.save(userFound);
     }
 
     @Override
     public String encryptPassword(String password) {
-        return "";
+        return passwordEncoder.encode(password);
     }
 
     private Set<Role> resolveRoles(Set<Role> roles) {
