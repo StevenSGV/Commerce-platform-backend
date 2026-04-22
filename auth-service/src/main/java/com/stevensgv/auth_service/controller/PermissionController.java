@@ -5,6 +5,7 @@ import com.stevensgv.auth_service.service.IPermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,17 +19,20 @@ public class PermissionController {
     private final IPermissionService permissionService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('READ_ROLE')")
     public ResponseEntity<List<Permission>> getAllPermissions() {
         return ResponseEntity.ok().body(permissionService.findAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('READ_ROLE')")
     public ResponseEntity<Permission> getPermissionById(@PathVariable Long id) {
         Optional<Permission> permission = permissionService.findById(id);
         return permission.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_ROLE')")
     public ResponseEntity<Permission> createPermission(@RequestBody Permission permission) {
         return ResponseEntity.status(HttpStatus.CREATED).body(permissionService.save(permission));
     }
