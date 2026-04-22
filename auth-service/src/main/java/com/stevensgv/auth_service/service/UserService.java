@@ -31,8 +31,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<UserSec> findByUsername(String username) {
-        return userRepository.findUserEntityByUsername(username);
+    public Optional<UserSec> findByEmail(String email) {
+        return userRepository.findUserEntityByEmail(email);
     }
 
     @Override

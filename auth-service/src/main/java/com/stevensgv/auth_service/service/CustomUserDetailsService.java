@@ -20,9 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final IUserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserSec userSec = userRepository.findUserEntityByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserSec userSec = userRepository.findUserEntityByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 

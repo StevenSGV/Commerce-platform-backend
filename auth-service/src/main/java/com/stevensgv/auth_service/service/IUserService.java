@@ -11,7 +11,7 @@ public interface IUserService {
 
     Optional<UserSec> findById(long id);
 
-    Optional<UserSec> findByUsername(String username);
+    Optional<UserSec> findByEmail(String email);
 
     UserSec save(UserSec user);
 
