@@ -25,11 +25,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(request -> request.anyRequest().permitAll()/*request ->
+                .authorizeHttpRequests(request ->
                         request.requestMatchers("/api/auth/**")
                                 .permitAll()
                                 .anyRequest()
-                                .authenticated()*/)
+                                .authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
