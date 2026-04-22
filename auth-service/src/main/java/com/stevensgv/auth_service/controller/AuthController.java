@@ -1,5 +1,7 @@
 package com.stevensgv.auth_service.controller;
 
+import com.stevensgv.auth_service.dto.AuthLoginRequestDTO;
+import com.stevensgv.auth_service.dto.AuthResponseDTO;
 import com.stevensgv.auth_service.service.JwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +26,12 @@ public class AuthController {
     public AuthResponseDTO login (@Valid @RequestBody AuthLoginRequestDTO request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.username,
-                        request.password));
+                        request.username(),
+                        request.password()));
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(userDetails);
 
-        return new AuthResponse(token);
+        return new AuthResponseDTO(token);
     }
 }
