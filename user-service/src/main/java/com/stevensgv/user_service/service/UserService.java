@@ -1,5 +1,6 @@
 package com.stevensgv.user_service.service;
 
+import com.stevensgv.user_service.exception.ResourceNotFoundException;
 import com.stevensgv.user_service.model.Role;
 import com.stevensgv.user_service.model.UserSec;
 import com.stevensgv.user_service.repository.IUserRepository;
