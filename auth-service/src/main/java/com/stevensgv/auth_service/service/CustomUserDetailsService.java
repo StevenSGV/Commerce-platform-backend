@@ -1,6 +1,5 @@
 package com.stevensgv.auth_service.service;
 
-import com.stevensgv.auth_service.model.UserSec;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
