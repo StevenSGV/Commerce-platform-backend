@@ -1,5 +1,7 @@
 package com.stevensgv.user_service.controller;
 
+import com.stevensgv.user_service.dto.UserAuthDTO;
+import com.stevensgv.user_service.mapper.UserMapper;
 import com.stevensgv.user_service.model.UserSec;
 import com.stevensgv.user_service.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 public class UserController {
 
     private final IUserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping
     public ResponseEntity<List<UserSec>> getAllUsers() {
@@ -29,11 +32,11 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserSec> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserAuthDTO> getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email)
+                .map(userMapper::toAuthDTO)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
-
     }
 
     @PostMapping

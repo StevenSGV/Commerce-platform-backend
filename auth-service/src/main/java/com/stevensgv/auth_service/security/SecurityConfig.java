@@ -5,6 +5,7 @@ import com.stevensgv.auth_service.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,7 +34,7 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers("/api/auth/**")
+                        request.requestMatchers(HttpMethod.POST, "/api/login")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated())
