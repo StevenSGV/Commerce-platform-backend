@@ -1,5 +1,6 @@
 package com.stevensgv.auth_service.service;
 
+import com.stevensgv.auth_service.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,32 +16,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final IUserRepository userRepository;
+    private final IUserFeign userFeign;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserSec userSec = userRepository.findUserEntityByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        UserDTO userDTO = userFeign.getUserByEmail(email);
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 
-        userSec.getRoles()
+        userDTO.roles()
                 .forEach(role ->
-                        authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role.getName()))));
+                        authorityList.add(new SimpleGrantedAuthority("ROLE_".concat(role))));
 
-        userSec.getRoles().stream()
-                .flatMap(role ->
-                        role.getPermissions().stream())
+        userDTO.permissions()
                 .forEach(permission ->
-                        authorityList.add(new SimpleGrantedAuthority(permission.getName())));
+                        authorityList.add(new SimpleGrantedAuthority(permission)));
 
         return new User(
-                userSec.getEmail(),
-                userSec.getPassword(),
-                userSec.isEnabled(),
-                userSec.isAccountNonExpired(),
-                userSec.isAccountNonLocked(),
-                userSec.isCredentialsNonExpired(),
+                userDTO.email(),
+                userDTO.password(),
+                userDTO.enabled(),
+                userDTO.accountNonExpired(),
+                userDTO.accountNonLocked(),
+                userDTO.credentialsNonExpired(),
                 authorityList);
     }
 }
