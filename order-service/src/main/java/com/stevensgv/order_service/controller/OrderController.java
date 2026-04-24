@@ -4,6 +4,7 @@ import com.stevensgv.order_service.model.Order;
 import com.stevensgv.order_service.service.IOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class OrderController {
     private final IOrderService orderService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Order> getOrders() {
         return orderService.getOrderList();
     }

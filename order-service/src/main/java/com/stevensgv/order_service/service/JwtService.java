@@ -49,7 +49,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public List<SimpleGrantedAuthority> getAuthorities(String token) {
+    public List<GrantedAuthority> getAuthorities(String token) {
         Claims claims = extractAllClaims(token);
 
         List<String> roles = claims.get("roles", List.class);
