@@ -1,7 +1,7 @@
-package com.stevensgv.order_service.security;
+package com.stevensgv.product_service.security;
 
-import com.stevensgv.order_service.security.filter.JwtAuthenticationFilter;
-import com.stevensgv.order_service.service.JwtService;
+import com.stevensgv.product_service.security.filter.JwtAuthenticationFilter;
+import com.stevensgv.product_service.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
