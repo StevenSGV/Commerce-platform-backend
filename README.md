@@ -1,4 +1,4 @@
-# Commerce Platform Microservices with Spring Cloud, Security & JWT
+# Scalable Marketplace Platform Backend with Spring Cloud, Security & JWT
 
 Microservices-based backend project for a commerce platform built with **Java**, **Spring Boot**, and **Spring Cloud**.  
 This project was developed as a portfolio application to demonstrate practical backend skills in **distributed architecture**, **inter-service communication**, **centralized configuration**, **fault tolerance**, and **security with Spring Security and JWT**.
